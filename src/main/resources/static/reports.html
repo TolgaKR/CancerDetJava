@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Raporlar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-white">
+<div class="container mt-5">
+    <h3 class="text-center mb-4">Rapor Listesi</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Hasta</th>
+            <th>Fotoğraf</th>
+            <th>YZ Sonucu</th>
+            <th>Tarih</th>
+        </tr>
+        </thead>
+        <tbody id="raporBody"></tbody>
+    </table>
+</div>
+
+<script>
+    const doktorId = localStorage.getItem("doktorId");
+
+    fetch(`http://localhost:8080/api/report/doktor/${doktorId}`)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById("raporBody");
+        data.forEach(r => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${r.patient.ad} ${r.patient.soyad}</td>
+              <td>${r.fotografPath}</td>
+              <td>${r.yzSonucu}</td>
+              <td>${r.tarih}</td>
+            </tr>
+          `;
+        });
+      });
+</script>
+</body>
+</html>

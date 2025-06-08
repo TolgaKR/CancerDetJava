@@ -267,6 +267,33 @@
             box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
         }
 
+        /* Analiz Et Butonu Stilleri */
+        .btn-analyze {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-analyze:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .btn-analyze:active {
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
             .main-container {
                 padding: 1rem;
@@ -365,6 +392,7 @@
                     <th>Yaş</th>
                     <th>Rapor Sayısı</th>
                     <th>Son Güncelleme</th>
+                    <th>İşlemler</th>
                 </tr>
                 </thead>
                 <tbody id="hastaTablosu">
@@ -406,8 +434,9 @@
     });
 
     function getDoktorId() {
-        // localStorage yerine sessionStorage kullanabilir veya URL parametresi olarak alabilirsiniz
-        return sessionStorage.getItem("doktorId") || localStorage.getItem("doktorId");
+        // URL parametresi veya browser storage kullanmadan basit çözüm
+        // Gerçek uygulamada session'dan alınacak
+        return "1"; // Test için sabit değer, gerçekte session'dan gelecek
     }
 
     function setupEventListeners() {
@@ -442,34 +471,40 @@
         }
     }
 
-    function loadPatients(doktorId) {
+    function loadPatients() {
         showLoading(true);
 
-        fetch(`http://localhost:8080/api/patient/doctor/${doktorId}`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                return res.json();
-            })
-            .then(hastalar => {
-                allPatients = hastalar;
-                filteredPatients = [...hastalar];
-                showLoading(false);
+        fetch(`http://localhost:8080/api/patient/my`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(hastalar => {
+            allPatients = hastalar;
+            filteredPatients = [...hastalar];
+            showLoading(false);
 
-                if (hastalar.length === 0) {
-                    showEmptyState();
-                } else {
-                    displayPatients(hastalar);
-                    updateStats(hastalar);
-                }
-            })
-            .catch(err => {
-                console.error("Hatalı istek:", err);
-                showLoading(false);
-                showAlert("Hastalar yüklenirken hata oluştu. Lütfen tekrar deneyin.", "danger");
+            if (hastalar.length === 0) {
                 showEmptyState();
-            });
+            } else {
+                displayPatients(hastalar);
+                updateStats(hastalar);
+            }
+        })
+        .catch(err => {
+            console.error("Hatalı istek:", err);
+            showLoading(false);
+            showAlert("Hastalar yüklenirken hata oluştu. Lütfen tekrar deneyin.", "danger");
+            showEmptyState();
+        });
     }
 
     function showEmptyState() {
@@ -504,6 +539,11 @@
                 <td>${age} yaş</td>
                 <td><span class="badge-reports">${hasta.reports ? hasta.reports.length : 0}</span></td>
                 <td><small class="text-muted">${lastUpdate}</small></td>
+                <td>
+                    <button class="btn-analyze" onclick="analyzePatient(${hasta.id}, '${hasta.ad}', '${hasta.soyad}')" title="Hasta Analizi Yap">
+                        <i class="fas fa-microscope"></i> Analiz Et
+                    </button>
+                </td>
             `;
             tbody.appendChild(tr);
         });
@@ -592,6 +632,19 @@
         document.body.removeChild(link);
 
         showAlert("Hasta listesi başarıyla indirildi.", "success");
+    }
+
+    // Hasta analizi fonksiyonu
+    function analyzePatient(patientId, firstName, lastName) {
+        // URL parametreleri ile hasta bilgilerini geç
+        const params = new URLSearchParams({
+            patientId: patientId,
+            firstName: firstName,
+            lastName: lastName
+        });
+
+        // patientfoto.html sayfasına hasta bilgileri ile yönlendir
+        window.location.href = `patientfoto.html?${params.toString()}`;
     }
 </script>
 </body>

@@ -3,896 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeni Rapor - Doktor Paneli</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Hasta Ekle</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --light-bg: #f8f9fa;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --border-radius: 12px;
-        }
-
-      body {
-    background: linear-gradient(135deg, #e0e7fa 0%, #d3bcf6 100%); /* Hafif mor tonları */
-    min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-        .main-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        .header-section {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .header-section h1 {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            font-size: 2.2rem;
-        }
-
-        .header-section p {
-            color: #6c757d;
-            font-size: 1.1rem;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .form-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-        }
-
-        .form-header {
-            background: var(--primary-color);
-            color: white;
-            padding: 1.5rem;
-            border-bottom: none;
-        }
-
-        .form-header h4 {
-            margin: 0;
-            font-weight: 600;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .form-body {
-            padding: 2rem;
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .form-section {
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .form-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-control, .form-select {
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-        }
-
-        .file-upload-area {
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
-            padding: 2rem;
+        .header {
             text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
             position: relative;
         }
 
-        .file-upload-area:hover {
-            border-color: var(--secondary-color);
-            background: #f8f9fa;
+        label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
-        .file-upload-area.dragover {
-            border-color: var(--success-color);
-            background: #d4edda;
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
         }
 
-        .file-upload-icon {
-            font-size: 3rem;
-            color: #dee2e6;
-            margin-bottom: 1rem;
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
         }
 
-        .file-upload-text {
-            color: #6c757d;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+        input:hover {
+            border-color: #b8c6db;
         }
 
-        .file-upload-subtext {
-            color: #adb5bd;
-            font-size: 0.9rem;
-        }
-
-        .file-preview {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .file-preview-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .file-preview-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--success-color);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .file-preview-info {
-            flex: 1;
-        }
-
-        .file-preview-name {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.2rem;
-        }
-
-        .file-preview-size {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-
-        .remove-file-btn {
-            background: var(--accent-color);
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
-        .remove-file-btn:hover {
-            background: #c0392b;
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .ai-result-container {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .mesaj {
+            margin-top: 20px;
+            padding: 12px 16px;
             border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .ai-result-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-
-        .btn-custom {
-            border-radius: 25px;
-            padding: 0.8rem 2rem;
-            font-weight: 600;
+            font-weight: 500;
+            text-align: center;
             transition: all 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1rem;
+            opacity: 0;
+            transform: translateY(-10px);
         }
 
-        .btn-success-custom {
-            background: var(--success-color);
+        .mesaj.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mesaj.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
         }
 
-        .btn-success-custom:hover {
-            background: #219a52;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-        }
-
-        .btn-primary-custom {
-            background: var(--secondary-color);
+        .mesaj.error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
             color: white;
         }
 
-        .btn-primary-custom:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
         }
 
-        .btn-secondary-custom {
-            background: #6c757d;
-            color: white;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .btn-secondary-custom:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .action-buttons {
+        .nav-buttons {
+            margin-top: 30px;
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+            gap: 12px;
+            flex-direction: column;
         }
 
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 9999;
+        .nav-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
         }
 
-        .loading-content {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            box-shadow: var(--card-shadow);
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
 
-        .progress-container {
-            display: none;
-            margin-top: 1rem;
+        .nav-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .progress {
-            height: 8px;
-            border-radius: 4px;
-            background: #e9ecef;
+        .nav-btn.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
         }
 
-        .progress-bar {
-            border-radius: 4px;
-            transition: width 0.3s ease;
+        .nav-btn.secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
         }
 
-        .alert-custom {
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .nav-btn:active {
+            transform: translateY(0);
         }
 
-        .required {
-            color: var(--accent-color);
-        }
-
-        .form-floating label {
-            color: #6c757d;
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 1rem;
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
             }
 
-            .header-section h1 {
-                font-size: 1.8rem;
+            .header h2 {
+                font-size: 24px;
             }
 
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn-custom {
-                width: 100%;
-                justify-content: center;
+            .nav-buttons {
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
-<div class="main-container">
-    <div class="header-section">
-        <h1><i class="fas fa-file-medical-alt"></i> Yeni Rapor Oluştur</h1>
-        <p>Hasta bilgileri ve rapor detaylarını girin</p>
+<div class="container">
+    <div class="header">
+        <h2>Yeni Hasta Ekle</h2>
+        <p>Hasta bilgilerini eksiksiz doldurunuz</p>
     </div>
 
-    <div class="form-container">
-        <div class="form-header">
-            <h4><i class="fas fa-edit"></i> Rapor Bilgileri</h4>
+    <form id="hastaForm">
+        <div class="form-group">
+            <label for="ad">Ad</label>
+            <input type="text" id="ad" required autocomplete="given-name">
         </div>
 
-        <div class="form-body">
-            <form id="reportForm">
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="fas fa-user"></i> Hasta Bilgileri
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="ad" class="form-label">
-                                <i class="fas fa-user"></i> Hasta Adı <span class="required">*</span>
-                            </label>
-                            <input type="text" id="ad" class="form-control" placeholder="Hasta adını girin" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="soyad" class="form-label">
-                                <i class="fas fa-user"></i> Hasta Soyadı <span class="required">*</span>
-                            </label>
-                            <input type="text" id="soyad" class="form-control" placeholder="Hasta soyadını girin" required>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="dogum" class="form-label">
-                                <i class="fas fa-calendar-alt"></i> Doğum Tarihi <span class="required">*</span>
-                            </label>
-                            <input type="date" id="dogum" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">
-                                <i class="fas fa-info-circle"></i> Hesaplanan Yaş
-                            </label>
-                            <input type="text" id="yasDisplay" class="form-control" readonly placeholder="Yaş otomatik hesaplanacak">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="fas fa-camera"></i> Tıbbi Görüntü
-                    </div>
-
-                    <div class="file-upload-area" id="fileUploadArea">
-                        <input type="file" id="foto" accept="image/*" style="display: none;">
-                        <div class="file-upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                        </div>
-                        <div class="file-upload-text">
-                            Fotoğraf yüklemek için tıklayın veya dosyayı sürükleyin
-                        </div>
-                        <div class="file-upload-subtext">
-                            JPG, PNG, GIF formatları desteklenir (Max: 10MB)
-                        </div>
-                    </div>
-
-                    <div class="file-preview" id="filePreview">
-                        <div class="file-preview-item">
-                            <div class="file-preview-icon">
-                                <i class="fas fa-image"></i>
-                            </div>
-                            <div class="file-preview-info">
-                                <div class="file-preview-name" id="fileName"></div>
-                                <div class="file-preview-size" id="fileSize"></div>
-                            </div>
-                            <button type="button" class="remove-file-btn" id="removeFileBtn">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="progress-container" id="progressContainer">
-                        <div class="progress">
-                            <div class="progress-bar bg-success" id="uploadProgress" style="width: 0%"></div>
-                        </div>
-                        <small class="text-muted mt-1">Fotoğraf yükleniyor...</small>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="fas fa-brain"></i> Yapay Zeka Analizi
-                    </div>
-
-                    <label for="yz" class="form-label">
-                        <i class="fas fa-robot"></i> YZ Sonucu / Tanı
-                    </label>
-                    <textarea id="yz" class="form-control" rows="5"
-                              placeholder="Yapay zeka analiz sonucunu veya tanı bilgilerini girin..."></textarea>
-
-                    <div class="ai-result-container" style="display: none;" id="aiResultContainer">
-                        <div class="ai-result-header">
-                            <i class="fas fa-magic"></i>
-                            Otomatik AI Analizi
-                        </div>
-                        <div id="aiResultText"></div>
-                        <img id="aiProcessedImage" style="max-width:100%; height:auto; margin-top: 15px; border-radius: 8px; box-shadow: var(--card-shadow);">
-                    </div>
-
-                    <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="aiAnalyzeBtn" style="display: none;">
-                        <i class="fas fa-magic"></i> AI ile Analiz Et
-                    </button>
-                </div>
-            </form>
+        <div class="form-group">
+            <label for="soyad">Soyad</label>
+            <input type="text" id="soyad" required autocomplete="family-name">
         </div>
-    </div>
 
-    <div class="action-buttons">
-        <button type="button" onclick="window.location.href='patient.html'" class="btn btn-secondary-custom btn-custom">
-            <i class="fas fa-users"></i> Hastalarımı Gör
+        <div class="form-group">
+            <label for="dogumTarihi">Doğum Tarihi</label>
+            <input type="date" id="dogumTarihi" required>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+            Kaydet
         </button>
-        <button type="button" onclick="resetForm()" class="btn btn-outline-secondary btn-custom">
-            <i class="fas fa-redo"></i> Formu Temizle
+
+        <div class="mesaj" id="mesaj"></div>
+    </form>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button type="button" class="nav-btn secondary" onclick="window.location.href='patient.html'">
+            <i class="fas fa-list"></i> Hastalarımı Gör
         </button>
-        <button type="button" onclick="raporKaydet()" class="btn btn-success-custom btn-custom" id="saveBtn">
-            <i class="fas fa-save"></i> Raporu Kaydet
+        <button type="button" class="nav-btn primary" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-home"></i> Ana Sayfa
         </button>
     </div>
 </div>
 
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-content">
-        <div class="spinner-border text-primary mb-3" role="status"></div>
-        <h5>Rapor Kaydediliyor...</h5>
-        <p class="text-muted">Lütfen bekleyiniz, işlem tamamlanıyor.</p>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    let selectedFile = null;
+    document.getElementById('hastaForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-    document.addEventListener("DOMContentLoaded", () => {
-        setupEventListeners();
-        checkDoctorAuth();
-    });
+        const submitBtn = document.getElementById('submitBtn');
+        const mesajDiv = document.getElementById('mesaj');
 
-    function checkDoctorAuth() {
-        const doktorId = getDoktorId();
-        if (!doktorId) {
-            showAlert("Doktor girişi yapılmamış. Lütfen giriş yapın.", "danger");
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 2000);
-        }
-    }
+        // Form verilerini al
+        const ad = document.getElementById('ad').value.trim();
+        const soyad = document.getElementById('soyad').value.trim();
+        const dogumTarihi = document.getElementById('dogumTarihi').value;
 
-    function getDoktorId() {
-        return sessionStorage.getItem("doktorId") || localStorage.getItem("doktorId");
-    }
+        // Loading durumu
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading"></span>Kaydediliyor...';
+        mesajDiv.classList.remove('show');
 
-    function setupEventListeners() {
-        // Doğum tarihi değişikliği
-        document.getElementById("dogum").addEventListener("change", calculateAge);
-
-        // Dosya yükleme
-        const fileUploadArea = document.getElementById("fileUploadArea");
-        const fileInput = document.getElementById("foto");
-
-        fileUploadArea.addEventListener("click", () => fileInput.click());
-        fileInput.addEventListener("change", handleFileSelect);
-
-        // Drag & Drop
-        fileUploadArea.addEventListener("dragover", handleDragOver);
-        fileUploadArea.addEventListener("dragleave", handleDragLeave);
-        fileUploadArea.addEventListener("drop", handleFileDrop);
-
-        // Dosya silme
-        document.getElementById("removeFileBtn").addEventListener("click", removeFile);
-
-        // Form validasyonu
-        document.getElementById("reportForm").addEventListener("input", validateForm);
-
-        // AI analizi butonu için yeni event listener
-        document.getElementById("aiAnalyzeBtn").addEventListener("click", async function() {
-            if (!selectedFile) {
-                showAlert("Lütfen önce bir fotoğraf seçin.", "warning");
-                return;
-            }
-
-            // Yükleme durumunu göster
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analiz ediliyor...';
-            this.disabled = true;
-            this.classList.remove('btn-outline-primary', 'btn-success-custom', 'btn-danger'); // Önceki durumları temizle
-            this.classList.add('btn-primary-custom'); // Yeni durum için stil
-
-            document.getElementById("aiResultContainer").style.display = "none"; // Önceki sonuçları gizle
-            document.getElementById("aiResultText").textContent = ""; // Önceki metni temizle
-            document.getElementById("yz").value = ""; // AI sonucunu temizle
-            const aiProcessedImage = document.getElementById("aiProcessedImage");
-            if (aiProcessedImage) {
-                aiProcessedImage.src = "";
-                aiProcessedImage.style.display = "none";
-            }
-
-            // Progress bar'ı göster
-            const progressContainer = document.getElementById("progressContainer");
-            const uploadProgress = document.getElementById("uploadProgress");
-            progressContainer.style.display = "block";
-            uploadProgress.style.width = "0%"; // Başlangıçta 0%
-
-            // Simüle edilmiş bir ilerleme animasyonu (gerçek yükleme süresini göstermez, sadece UI geri bildirimi)
-            let currentProgress = 0;
-            const interval = setInterval(() => {
-                currentProgress += 10;
-                if (currentProgress <= 90) { // %100 olmadan önce durdur
-                    uploadProgress.style.width = currentProgress + '%';
-                } else {
-                    clearInterval(interval);
-                }
-            }, 200);
-
-            try {
-                const formData = new FormData();
-                formData.append('file', selectedFile); // Dosyayı 'file' anahtarıyla ekle
-
-                // Spring Boot'taki /process-image endpoint'ine isteği atıyoruz
-                const response = await fetch("http://localhost:8080/api/process-image", {
-                    method: "POST",
-                    body: formData
-                });
-
-                // Tüm ilerlemeyi tamamla (eğer API yanıtı hızlı gelirse)
-                clearInterval(interval);
-                uploadProgress.style.width = "100%";
-
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ message: "Bilinmeyen bir hata oluştu." }));
-                    throw new Error(`API Hatası: ${response.status} - ${errorData.message || response.statusText}`);
-                }
-
-                const result = await response.json();
-                console.log("AI Analiz Sonucu:", result); // Konsolda yanıtı gör
-
-
-                if (result.status === 'success') {
-                    let predictionText = "Model Tespiti: ";
-                    if (result.predictions && result.predictions.length > 0) {
-                        result.predictions.forEach(p => {
-                            predictionText += `${p.class_name} (%${(p.confidence * 100).toFixed(2)}) `;
-                        });
-                    } else {
-                        predictionText = "Model tarafından herhangi bir bulgu tespit edilemedi.";
-                    }
-
-                    document.getElementById("aiResultText").textContent = predictionText;
-                    document.getElementById("aiResultContainer").style.display = "block";
-                    document.getElementById("yz").value = predictionText; // TextArea'ya da yaz
-
-                    // Base64 görüntüyü göster
-                    if (aiProcessedImage && result.marked_image_base64) {
-                        aiProcessedImage.src = `data:image/jpeg;base64,${result.marked_image_base64}`;
-                        aiProcessedImage.style.display = "block";
-                    }
-
-
-                    this.innerHTML = '<i class="fas fa-check"></i> Analiz Tamamlandı';
-                    this.classList.remove('btn-primary-custom');
-                    this.classList.add('btn-success-custom'); // Başarılı renk
-                    showAlert("Yapay Zeka Analizi Başarılı!", "success");
-                } else {
-                    // Python API'sinden 'success' gelmezse
-                    throw new Error(result.message || "Yapay Zeka Analizi Başarısız.");
-                }
-
-            } catch (error) {
-                clearInterval(interval); // Hata durumunda ilerlemeyi durdur
-                uploadProgress.style.width = "0%"; // Hata durumunda sıfırla
-                console.error("AI Analizi hatası:", error);
-                showAlert(`AI Analizi sırasında bir hata oluştu: ${error.message}`, "danger");
-                this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Analiz Hatası';
-                this.classList.remove('btn-primary-custom', 'btn-success-custom');
-                this.classList.add('btn-danger'); // Hata renk
-            } finally {
-                this.disabled = false;
-                progressContainer.style.display = "none"; // Progress bar'ı gizle
-            }
-        });
-    }
-
-    function calculateAge() {
-        const birthDate = document.getElementById("dogum").value;
-        if (birthDate) {
-            const today = new Date();
-            const birth = new Date(birthDate);
-            let age = today.getFullYear() - birth.getFullYear();
-            const monthDiff = today.getMonth() - birth.getMonth();
-
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-                age--;
-            }
-
-            document.getElementById("yasDisplay").value = age + " yaş";
-        }
-    }
-
-    function handleFileSelect(event) {
-        const file = event.target.files[0];
-        if (file) {
-            validateAndPreviewFile(file);
-        }
-    }
-
-    function handleDragOver(event) {
-        event.preventDefault();
-        event.currentTarget.classList.add("dragover");
-    }
-
-    function handleDragLeave(event) {
-        event.currentTarget.classList.remove("dragover");
-    }
-
-    function handleFileDrop(event) {
-        event.preventDefault();
-        event.currentTarget.classList.remove("dragover");
-
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-            validateAndPreviewFile(files[0]);
-        }
-    }
-
-    function validateAndPreviewFile(file) {
-        // Dosya türü kontrolü
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!allowedTypes.includes(file.type)) {
-            showAlert("Sadece JPG, PNG ve GIF formatları desteklenir.", "warning");
-            return;
-        }
-
-        // Dosya boyutu kontrolü (10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            showAlert("Dosya boyutu 10MB'dan küçük olmalıdır.", "warning");
-            return;
-        }
-
-        selectedFile = file;
-        showFilePreview(file);
-
-        // AI analizi butonunu göster ve sıfırla
-        const aiAnalyzeBtn = document.getElementById("aiAnalyzeBtn");
-        aiAnalyzeBtn.style.display = "inline-block";
-        aiAnalyzeBtn.innerHTML = '<i class="fas fa-magic"></i> AI ile Analiz Et';
-        aiAnalyzeBtn.disabled = false;
-        aiAnalyzeBtn.classList.remove('btn-success-custom', 'btn-danger');
-        aiAnalyzeBtn.classList.add('btn-outline-primary');
-
-        // Önceki AI sonuçlarını temizle
-        document.getElementById("aiResultContainer").style.display = "none";
-        document.getElementById("aiResultText").textContent = "";
-        const aiProcessedImage = document.getElementById("aiProcessedImage");
-        if (aiProcessedImage) {
-            aiProcessedImage.src = "";
-            aiProcessedImage.style.display = "none";
-        }
-        document.getElementById("yz").value = ""; // TextArea'yı da temizle
-    }
-
-    function showFilePreview(file) {
-        document.getElementById("fileName").textContent = file.name;
-        document.getElementById("fileSize").textContent = formatFileSize(file.size);
-        document.getElementById("filePreview").style.display = "block";
-        document.getElementById("fileUploadArea").style.display = "none";
-    }
-
-    function removeFile() {
-        selectedFile = null;
-        document.getElementById("foto").value = "";
-        document.getElementById("filePreview").style.display = "none";
-        document.getElementById("fileUploadArea").style.display = "block";
-
-        // AI analiz butonunu gizle ve sıfırla
-        const aiAnalyzeBtn = document.getElementById("aiAnalyzeBtn");
-        aiAnalyzeBtn.style.display = "none";
-        aiAnalyzeBtn.innerHTML = '<i class="fas fa-magic"></i> AI ile Analiz Et';
-        aiAnalyzeBtn.disabled = false;
-        aiAnalyzeBtn.classList.remove('btn-success-custom', 'btn-danger');
-        aiAnalyzeBtn.classList.add('btn-outline-primary');
-
-        // AI sonuçlarını ve resmi temizle
-        document.getElementById("aiResultContainer").style.display = "none";
-        document.getElementById("aiResultText").textContent = "";
-        const aiProcessedImage = document.getElementById("aiProcessedImage");
-        if (aiProcessedImage) {
-            aiProcessedImage.src = "";
-            aiProcessedImage.style.display = "none";
-        }
-        document.getElementById("yz").value = ""; // TextArea'yı da temizle
-    }
-
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    function validateForm() {
-        const ad = document.getElementById("ad").value.trim();
-        const soyad = document.getElementById("soyad").value.trim();
-        const dogum = document.getElementById("dogum").value;
-
-        const saveBtn = document.getElementById("saveBtn");
-        const isValid = ad && soyad && dogum;
-
-        saveBtn.disabled = !isValid;
-        saveBtn.style.opacity = isValid ? "1" : "0.6";
-    }
-
-    function showAlert(message, type = "info") {
-        const iconMap = {
-            'danger': 'exclamation-triangle',
-            'warning': 'exclamation-circle',
-            'success': 'check-circle',
-            'info': 'info-circle'
+        const hasta = {
+            ad,
+            soyad,
+            dogumTarihi
         };
 
-        const alertHtml = `
-            <div class="alert alert-${type} alert-custom alert-dismissible fade show" role="alert">
-                <i class="fas fa-${iconMap[type]}"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
-        document.querySelector('.main-container').insertAdjacentHTML('afterbegin', alertHtml);
-    }
-
-    function showLoading(show = true) {
-        const overlay = document.getElementById("loadingOverlay");
-        overlay.style.display = show ? "flex" : "none";
-    }
-
-    function resetForm() {
-        document.getElementById("reportForm").reset();
-        document.getElementById("yasDisplay").value = "";
-        removeFile(); // Bu fonksiyon zaten gerekli temizlemeleri yapıyor
-        validateForm();
-    }
-
-    async function raporKaydet() {
-        const doktorId = getDoktorId();
-
-        if (!doktorId) {
-            showAlert("Doktor kimlik bilgisi bulunamadı. Lütfen giriş yapın.", "danger");
-            return;
-        }
-
-        // Form validasyonu
-        const ad = document.getElementById("ad").value.trim();
-        const soyad = document.getElementById("soyad").value.trim();
-        const dogum = document.getElementById("dogum").value;
-        const yzSonucu = document.getElementById("yz").value.trim(); // YZ sonucunu buradan al
-
-        if (!ad || !soyad || !dogum) {
-            showAlert("Lütfen tüm zorunlu alanları doldurun.", "warning");
-            return;
-        }
-
-        showLoading(true);
-
         try {
-            // Hasta oluştur/bul
-            const hasta = {
-                ad: ad,
-                soyad: soyad,
-                dogumTarihi: dogum
-            };
-
-            const hastaResponse = await fetch(`http://localhost:8080/api/patient/doctor/${doktorId}`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
+            const response = await fetch('http://localhost:8080/api/patient', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(hasta)
             });
 
-            if (!hastaResponse.ok) {
-                throw new Error(`Hasta kaydı hatası: ${hastaResponse.status}`);
+            if (response.ok) {
+                const data = await response.json();
+                mesajDiv.className = 'mesaj success show';
+                mesajDiv.textContent = '✓ Hasta başarıyla eklendi';
+                document.getElementById('hastaForm').reset();
+            } else {
+                mesajDiv.className = 'mesaj error show';
+                mesajDiv.textContent = '✗ Hasta eklenemedi. Lütfen tekrar deneyin.';
             }
-
-            const hastaData = await hastaResponse.json();
-
-            // Rapor oluştur
-            const report = {
-                doctor: { id: parseInt(doktorId) },
-                patient: { id: hastaData.id },
-                fotografPath: selectedFile ? selectedFile.name : "", // Gerçek uygulamada dosya yükleme yapılacak
-                yzSonucu: yzSonucu || "Analiz bekleniyor" // YZ sonucunu buradan al
-            };
-
-            const reportResponse = await fetch("http://localhost:8080/api/report/yukle", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(report)
-            });
-
-
-             const patientResponse = await fetch("http://localhost:8080/api/patient/kaydet", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(patient)
-            });
-
-            if (!reportResponse.ok) {
-                throw new Error(`Rapor kayıt hatası: ${reportResponse.status}`);
-            }
-
-            showLoading(false);
-            showAlert("Rapor başarıyla kaydedildi!", "success");
-
-            // Form temizle
-            setTimeout(() => {
-                resetForm();
-            }, 2000);
-
         } catch (error) {
-            showLoading(false);
-            console.error("Kayıt hatası:", error);
-            showAlert("Rapor kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.", "danger");
+            mesajDiv.className = 'mesaj error show';
+            mesajDiv.textContent = '✗ Bağlantı hatası: ' + error.message;
+            console.error('Hata:', error);
+        } finally {
+            // Loading durumunu kaldır
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Kaydet';
+        }
+    });
+
+    // Mesajı otomatik gizle
+    function hideMessage() {
+        const mesajDiv = document.getElementById('mesaj');
+        if (mesajDiv.classList.contains('show')) {
+            setTimeout(() => {
+                mesajDiv.classList.remove('show');
+            }, 3000);
         }
     }
+
+    // Mesaj gösterildiğinde otomatik gizleme başlat
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const target = mutation.target;
+                if (target.classList.contains('show')) {
+                    hideMessage();
+                }
+            }
+        });
+    });
+
+    observer.observe(document.getElementById('mesaj'), {
+        attributes: true,
+        attributeFilter: ['class']
+    });
 </script>
 </body>
 </html>

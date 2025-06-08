@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasta Fotoğraf Analizi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) translateX(-2px);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .patient-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .patient-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .patient-info p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px dashed #e1e5e9;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-area {
+            text-align: center;
+            cursor: pointer;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            transform: scale(1.1);
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            object-fit: contain;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-image:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .analysis-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .analyze-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 200px;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .results-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .results-content.success {
+            color: #27ae60;
+        }
+
+        .results-content.error {
+            color: #e74c3c;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .file-info {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #1976d2;
+        }
+
+        .file-info i {
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .back-btn {
+                left: 1rem;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                margin: 10px;
+            }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Geri
+        </button>
+        <h1><i class="fas fa-microscope"></i> Hasta Fotoğraf Analizi</h1>
+        <div class="patient-info" id="patientInfo">
+            <h3 id="patientName">Hasta Bilgisi Yükleniyor...</h3>
+            <p id="patientDetails">ID: -</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Upload Section -->
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-area" id="uploadArea" onclick="selectFile()">
+                <div id="uploadContent">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div class="upload-text">Fotoğraf Yükle</div>
+                    <div class="upload-subtext">
+                        JPG, PNG veya JPEG formatında fotoğraf seçin<br>
+                        Maksimum boyut: 10MB
+                    </div>
+                </div>
+                <div id="imagePreview" style="display: none;">
+                    <img id="previewImg" class="preview-image" alt="Önizleme">
+                    <button class="remove-image" onclick="removeImage(event)" title="Fotoğrafı Kaldır">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="handleFileSelect(event)">
+            <div id="fileInfo" class="file-info" style="display: none;">
+                <i class="fas fa-info-circle"></i>
+                <span id="fileDetails"></span>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="analysis-section">
+            <div class="analysis-header">
+                <div class="analysis-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div>
+                    <h3>AI Analizi</h3>
+                    <p style="color: #666; margin: 0; font-size: 0.9rem;">Görüntü işleme ve tanı desteği</p>
+                </div>
+            </div>
+
+            <div class="alert" id="alertBox">
+                <span id="alertMessage"></span>
+            </div>
+
+            <button class="analyze-btn" id="analyzeBtn" onclick="analyzeImage()" disabled>
+                <i class="fas fa-play"></i>
+                <span id="analyzeText">Analiz Et</span>
+            </button>
+
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="results-container">
+                <div class="results-header">
+                    <i class="fas fa-chart-line"></i>
+                    Analiz Sonuçları
+                </div>
+                <div class="results-content" id="resultsContent">
+                    Analiz için önce bir fotoğraf yükleyin ve analiz butonuna basın.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedFile = null;
+    let patientData = null;
+
+    // Sayfa yüklendiğinde hasta bilgilerini al
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPatientInfo();
+        setupDragAndDrop();
+    });
+
+    function loadPatientInfo() {
+        // URL parametrelerinden hasta bilgilerini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const patientId = urlParams.get('patientId');
+        const firstName = urlParams.get('firstName');
+        const lastName = urlParams.get('lastName');
+
+        if (patientId && firstName && lastName) {
+            patientData = {
+                id: patientId,
+                firstName: firstName,
+                lastName: lastName
+            };
+
+            document.getElementById('patientName').textContent = `${firstName} ${lastName}`;
+            document.getElementById('patientDetails').textContent = `Hasta ID: ${patientId}`;
+        } else {
+            showAlert('Hasta bilgileri bulunamadı!', 'error');
+            setTimeout(() => goBack(), 2000);
+        }
+    }
+
+    function setupDragAndDrop() {
+        const uploadArea = document.getElementById('uploadArea');
+        const uploadSection = document.getElementById('uploadSection');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadSection.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadSection.classList.remove('dragover');
+            }, false);
+        });
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    }
+
+    function selectFile() {
+        if (!document.getElementById('imagePreview').style.display ||
+            document.getElementById('imagePreview').style.display === 'none') {
+            document.getElementById('fileInput').click();
+        }
+    }
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    }
+
+    function handleFile(file) {
+        // Dosya formatı kontrolü
+        if (!file.type.startsWith('image/')) {
+            showAlert('Lütfen sadece resim dosyası seçin!', 'error');
+            return;
+        }
+
+        // Dosya boyutu kontrolü (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            showAlert('Dosya boyutu 10MB\'dan küçük olmalıdır!', 'error');
+            return;
+        }
+
+        selectedFile = file;
+
+        // Dosya önizlemesi
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('uploadContent').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'block';
+
+            // Dosya bilgilerini göster
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            document.getElementById('fileDetails').textContent =
+                `${file.name} (${fileSize} MB)`;
+            document.getElementById('fileInfo').style.display = 'block';
+
+            // Analiz butonunu aktifleştir
+            document.getElementById('analyzeBtn').disabled = false;
+
+            showAlert('Fotoğraf başarıyla yüklendi!', 'success');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeImage(event) {
+        event.stopPropagation();
+
+        selectedFile = null;
+        document.getElementById('uploadContent').style.display = 'block';
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('fileInfo').style.display = 'none';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('analyzeBtn').disabled = true;
+
+        // Sonuçları temizle
+        document.getElementById('resultsContent').textContent =
+            'Analiz için önce bir fotoğraf yükleyin ve analiz butonuna basın.';
+        document.getElementById('resultsContent').className = 'results-content';
+    }
+
+    async function analyzeImage() {
+        if (!selectedFile) {
+            showAlert('Lütfen önce bir fotoğraf seçin!', 'warning');
+            return;
+        }
+
+        if (!patientData) {
+            showAlert('Hasta bilgileri bulunamadı!', 'error');
+            return;
+        }
+
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const analyzeText = document.getElementById('analyzeText');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const resultsContent = document.getElementById('resultsContent');
+
+        // UI güncellemeleri
+        analyzeBtn.disabled = true;
+        analyzeText.innerHTML = '<div class="loading-spinner"></div> Analiz Ediliyor...';
+        progressBar.style.display = 'block';
+        resultsContent.textContent = 'Görüntü işleniyor, lütfen bekleyin...';
+        resultsContent.className = 'results-content';
+
+        // Progress bar animasyonu
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 90) progress = 90;
+            progressFill.style.width = progress + '%';
+        }, 200);
+
+        try {
+            // FormData oluştur
+            const formData = new FormData();
+            formData.append('file', selectedFile); // API 'file' parametresi bekliyor
+            formData.append('patientId', patientData.id);
+            formData.append('patientName', `${patientData.firstName} ${patientData.lastName}`);
+
+            // Python API'ye gönder
+            const response = await fetch('http://localhost:5000/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            clearInterval(progressInterval);
+            progressFill.style.width = '100%';
+
+            if (response.ok) {
+                const result = await response.json();
+
+                // Python API response formatına göre düzenlendi
+                if (result.status === 'success' && result.predictions) {
+                    let resultsHtml = `
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Melanoma Tespiti Tamamlandı!</strong>
+                        </div>
+                    `;
+
+                    if (result.predictions.length > 0) {
+                        result.predictions.forEach((detection, index) => {
+                            resultsHtml += `
+                                <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid ${detection.class_name.toLowerCase().includes('melanoma') ? '#e74c3c' : '#27ae60'};">
+                                    <strong>Tespit ${index + 1}:</strong> ${detection.class_name}<br>
+                                    <strong>Güven Oranı:</strong> ${(detection.confidence * 100).toFixed(2)}%<br>
+                                    <strong>Konum:</strong> [${detection.box.join(', ')}]
+                                </div>
+                            `;
+                        });
+
+                        // İşaretli görüntüyü göster
+                        if (result.marked_image_base64) {
+                            resultsHtml += `
+                                <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                    <strong>İşaretli Görüntü:</strong><br><br>
+                                    <img src="data:image/jpeg;base64,${result.marked_image_base64}"
+                                         style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"
+                                         alt="İşaretli Analiz Sonucu">
+                                </div>
+                            `;
+                        }
+                    } else {
+                        resultsHtml += `
+                            <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #27ae60;">
+                                <strong>Sonuç:</strong> Herhangi bir melanoma tespiti yapılmadı.<br>
+                                <small>Bu, görüntüde tespit edilebilir bir melanoma bulgusunun olmadığını gösterir.</small>
+                            </div>
+                        `;
+                    }
+
+                    resultsContent.innerHTML = resultsHtml;
+                    resultsContent.className = 'results-content success';
+                    showAlert('Melanoma analizi başarıyla tamamlandı!', 'success');
+                } else {
+                    throw new Error(result.message || 'Beklenmeyen API yanıtı');
+                }
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+        } catch (error) {
+            clearInterval(progressInterval);
+            console.error('Analiz hatası:', error);
+
+            resultsContent.innerHTML = `
+                <div style="color: #e74c3c;">
+                    <strong>Analiz Hatası!</strong><br>
+                    ${error.message}<br><br>
+                    <small>Lütfen daha sonra tekrar deneyin veya sistem yöneticisine başvurun.</small>
+                </div>
+            `;
+            resultsContent.className = 'results-content error';
+            showAlert('Analiz sırasında hata oluştu!', 'error');
+        } finally {
+            // UI'yi eski haline getir
+            setTimeout(() => {
+                analyzeBtn.disabled = false;
+                analyzeText.innerHTML = '<i class="fas fa-play"></i> Analiz Et';
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 1000);
+        }
+    }
+
+    function showAlert(message, type) {
+        const alertBox = document.getElementById('alertBox');
+        const alertMessage = document.getElementById('alertMessage');
+
+        alertMessage.textContent = message;
+        alertBox.className = `alert alert-${type} show`;
+
+        setTimeout(() => {
+            alertBox.classList.remove('show');
+        }, 5000);
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+</script>
+</body>
+</html>

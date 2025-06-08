@@ -1,6 +1,9 @@
 package com.medai.medaisystem.service;
 
+import com.medai.medaisystem.dto.PatientDto;
+import com.medai.medaisystem.model.Doctor;
 import com.medai.medaisystem.model.Patient;
+import com.medai.medaisystem.repository.DoctorRepository;
 import com.medai.medaisystem.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,21 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
-    public Patient hastaKaydet(Patient patient) {
+    @Autowired
+    private DoctorRepository doctorRepository; // <- BUNU EKLEDİK
+
+    // DTO ile hasta kaydetme
+    public Patient hastaKaydetDto(PatientDto dto) {
+        Patient patient = new Patient();
+        patient.setAd(dto.getAd());
+        patient.setSoyad(dto.getSoyad());
+        patient.setDogumTarihi(dto.getDogumTarihi());
+
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doktor bulunamadı"));
+
+        patient.setDoctor(doctor);
+
         return patientRepository.save(patient);
     }
 
@@ -22,10 +39,7 @@ public class PatientService {
         return patientRepository.findById(id);
     }
 
-    public List<Patient> doktorunHastalari(Long doctorId)
-    {
+    public List<Patient> doktorunHastalari(Long doctorId) {
         return patientRepository.findByDoctorId(doctorId);
     }
-
-
 }

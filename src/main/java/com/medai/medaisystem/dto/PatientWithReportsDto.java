@@ -1,6 +1,5 @@
 package com.medai.medaisystem.dto;
 
-import com.medai.medaisystem.model.Report;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class PatientDto {
+public class PatientWithReportsDto {
+    private Long id;
     private String ad;
     private String soyad;
     private LocalDate dogumTarihi;
-    private Long doctorId;
-    private List<Report> reports;
+    private List<ReportSummaryDto> raporlar;
 }

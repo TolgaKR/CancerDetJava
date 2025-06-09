@@ -53,11 +53,13 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none;
         }
 
         .back-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-50%) translateX(-2px);
+            color: white;
         }
 
         .header h1 {
@@ -82,6 +84,24 @@
         .patient-info p {
             opacity: 0.9;
             font-size: 0.95rem;
+        }
+
+        .patient-loading {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .patient-error {
+            background: rgba(231, 76, 60, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: inline-block;
+            color: #fff;
         }
 
         .main-content {
@@ -214,7 +234,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .analyze-btn:hover:not(:disabled) {
@@ -223,6 +243,35 @@
         }
 
         .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .save-report-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .save-report-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .save-report-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
@@ -357,13 +406,21 @@
 <body>
 <div class="container">
     <div class="header">
-        <button class="back-btn" onclick="goBack()">
+        <a href="javascript:history.back()" class="back-btn">
             <i class="fas fa-arrow-left"></i> Geri
-        </button>
+        </a>
         <h1><i class="fas fa-microscope"></i> Hasta Fotoğraf Analizi</h1>
-        <div class="patient-info" id="patientInfo">
-            <h3 id="patientName">Hasta Bilgisi Yükleniyor...</h3>
-            <p id="patientDetails">ID: -</p>
+        <div id="patientInfoContainer">
+            <div class="patient-loading" id="patientLoading">
+                <i class="fas fa-spinner fa-spin"></i> Hasta bilgisi yükleniyor...
+            </div>
+            <div class="patient-info" id="patientInfo" style="display: none;">
+                <h3 id="patientName">-</h3>
+                <p id="patientDetails">-</p>
+            </div>
+            <div class="patient-error" id="patientError" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i> Hasta bilgisi yüklenemedi
+            </div>
         </div>
     </div>
 
@@ -414,6 +471,11 @@
                 <span id="analyzeText">Analiz Et</span>
             </button>
 
+            <button class="save-report-btn" id="saveReportBtn" onclick="saveReportAndRedirect()" disabled>
+                <i class="fas fa-save"></i>
+                <span id="saveReportText">Raporu Kaydet</span>
+            </button>
+
             <div class="progress-bar" id="progressBar" style="display: none;">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
@@ -434,6 +496,7 @@
 <script>
     let selectedFile = null;
     let patientData = null;
+    let analysisResult = null;
 
     // Sayfa yüklendiğinde hasta bilgilerini al
     document.addEventListener('DOMContentLoaded', function() {
@@ -441,26 +504,72 @@
         setupDragAndDrop();
     });
 
-    function loadPatientInfo() {
-        // URL parametrelerinden hasta bilgilerini al
+    async function loadPatientInfo() {
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('patientId');
-        const firstName = urlParams.get('firstName');
-        const lastName = urlParams.get('lastName');
 
-        if (patientId && firstName && lastName) {
-            patientData = {
-                id: patientId,
-                firstName: firstName,
-                lastName: lastName
-            };
+        const loadingEl = document.getElementById('patientLoading');
+        const infoEl = document.getElementById('patientInfo');
+        const errorEl = document.getElementById('patientError');
 
-            document.getElementById('patientName').textContent = `${firstName} ${lastName}`;
-            document.getElementById('patientDetails').textContent = `Hasta ID: ${patientId}`;
-        } else {
-            showAlert('Hasta bilgileri bulunamadı!', 'error');
-            setTimeout(() => goBack(), 2000);
+        if (!patientId) {
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+            errorEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> URL\'den hasta ID alınamadı';
+            showAlert('Hasta ID bulunamadı! URL parametrelerini kontrol edin.', 'error');
+            return;
         }
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/report/doctors/1/patients-reports`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const allPatients = await response.json();
+            const patient = allPatients.find(p => p.id === parseInt(patientId));
+
+            if (patient) {
+                patientData = {
+                    id: patient.id,
+                    firstName: patient.ad,
+                    lastName: patient.soyad,
+                    birthDate: patient.dogumTarihi,
+                    reports: patient.raporlar || []
+                };
+
+                document.getElementById('patientName').textContent = `${patient.ad} ${patient.soyad}`;
+                document.getElementById('patientDetails').innerHTML = `
+                    <i class="fas fa-id-card"></i> Hasta ID: ${patient.id} &nbsp;&nbsp;
+                    <i class="fas fa-birthday-cake"></i> Doğum: ${formatDate(patient.dogumTarihi)} &nbsp;&nbsp;
+                    <i class="fas fa-file-medical"></i> ${patient.raporlar ? patient.raporlar.length : 0} Rapor
+                `;
+
+                loadingEl.style.display = 'none';
+                infoEl.style.display = 'block';
+                showAlert('Hasta bilgileri başarıyla yüklendi!', 'success');
+            } else {
+                throw new Error(`ID ${patientId} olan hasta bulunamadı`);
+            }
+
+        } catch (error) {
+            console.error('Hasta bilgisi yükleme hatası:', error);
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+            errorEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${error.message}`;
+            showAlert(`Hasta bilgisi alınamadı: ${error.message}`, 'error');
+        }
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'Belirtilmemiş';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('tr-TR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     }
 
     function setupDragAndDrop() {
@@ -515,13 +624,11 @@
     }
 
     function handleFile(file) {
-        // Dosya formatı kontrolü
         if (!file.type.startsWith('image/')) {
             showAlert('Lütfen sadece resim dosyası seçin!', 'error');
             return;
         }
 
-        // Dosya boyutu kontrolü (10MB)
         if (file.size > 10 * 1024 * 1024) {
             showAlert('Dosya boyutu 10MB\'dan küçük olmalıdır!', 'error');
             return;
@@ -529,22 +636,17 @@
 
         selectedFile = file;
 
-        // Dosya önizlemesi
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('previewImg').src = e.target.result;
             document.getElementById('uploadContent').style.display = 'none';
             document.getElementById('imagePreview').style.display = 'block';
 
-            // Dosya bilgilerini göster
             const fileSize = (file.size / 1024 / 1024).toFixed(2);
-            document.getElementById('fileDetails').textContent =
-                `${file.name} (${fileSize} MB)`;
+            document.getElementById('fileDetails').textContent = `${file.name} (${fileSize} MB)`;
             document.getElementById('fileInfo').style.display = 'block';
 
-            // Analiz butonunu aktifleştir
             document.getElementById('analyzeBtn').disabled = false;
-
             showAlert('Fotoğraf başarıyla yüklendi!', 'success');
         };
         reader.readAsDataURL(file);
@@ -554,15 +656,15 @@
         event.stopPropagation();
 
         selectedFile = null;
+        analysisResult = null;
         document.getElementById('uploadContent').style.display = 'block';
         document.getElementById('imagePreview').style.display = 'none';
         document.getElementById('fileInfo').style.display = 'none';
         document.getElementById('fileInput').value = '';
         document.getElementById('analyzeBtn').disabled = true;
+        document.getElementById('saveReportBtn').disabled = true;
 
-        // Sonuçları temizle
-        document.getElementById('resultsContent').textContent =
-            'Analiz için önce bir fotoğraf yükleyin ve analiz butonuna basın.';
+        document.getElementById('resultsContent').textContent = 'Analiz için önce bir fotoğraf yükleyin ve analiz butonuna basın.';
         document.getElementById('resultsContent').className = 'results-content';
     }
 
@@ -583,14 +685,12 @@
         const progressFill = document.getElementById('progressFill');
         const resultsContent = document.getElementById('resultsContent');
 
-        // UI güncellemeleri
         analyzeBtn.disabled = true;
         analyzeText.innerHTML = '<div class="loading-spinner"></div> Analiz Ediliyor...';
         progressBar.style.display = 'block';
         resultsContent.textContent = 'Görüntü işleniyor, lütfen bekleyin...';
         resultsContent.className = 'results-content';
 
-        // Progress bar animasyonu
         let progress = 0;
         const progressInterval = setInterval(() => {
             progress += Math.random() * 15;
@@ -599,13 +699,11 @@
         }, 200);
 
         try {
-            // FormData oluştur
             const formData = new FormData();
-            formData.append('file', selectedFile); // API 'file' parametresi bekliyor
+            formData.append('file', selectedFile);
             formData.append('patientId', patientData.id);
             formData.append('patientName', `${patientData.firstName} ${patientData.lastName}`);
 
-            // Python API'ye gönder
             const response = await fetch('http://localhost:5000/predict', {
                 method: 'POST',
                 body: formData
@@ -616,8 +714,8 @@
 
             if (response.ok) {
                 const result = await response.json();
+                analysisResult = result; // Sonucu kaydet
 
-                // Python API response formatına göre düzenlendi
                 if (result.status === 'success' && result.predictions) {
                     let resultsHtml = `
                         <div style="margin-bottom: 1rem;">
@@ -636,7 +734,6 @@
                             `;
                         });
 
-                        // İşaretli görüntüyü göster
                         if (result.marked_image_base64) {
                             resultsHtml += `
                                 <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center;">
@@ -658,6 +755,10 @@
 
                     resultsContent.innerHTML = resultsHtml;
                     resultsContent.className = 'results-content success';
+
+                    // Analiz başarılı olduğunda rapor kaydet butonunu aktif et
+                    document.getElementById('saveReportBtn').disabled = false;
+
                     showAlert('Melanoma analizi başarıyla tamamlandı!', 'success');
                 } else {
                     throw new Error(result.message || 'Beklenmeyen API yanıtı');
@@ -680,13 +781,66 @@
             resultsContent.className = 'results-content error';
             showAlert('Analiz sırasında hata oluştu!', 'error');
         } finally {
-            // UI'yi eski haline getir
             setTimeout(() => {
                 analyzeBtn.disabled = false;
                 analyzeText.innerHTML = '<i class="fas fa-play"></i> Analiz Et';
                 progressBar.style.display = 'none';
                 progressFill.style.width = '0%';
             }, 1000);
+        }
+    }
+
+    async function saveReportAndRedirect() {
+        if (!analysisResult || !patientData) {
+            showAlert('Kaydedilecek analiz sonucu bulunamadı!', 'error');
+            return;
+        }
+
+        const saveBtn = document.getElementById('saveReportBtn');
+        const saveText = document.getElementById('saveReportText');
+        const originalText = saveText.innerHTML;
+
+        try {
+            saveBtn.disabled = true;
+            saveText.innerHTML = '<div class="loading-spinner"></div> Kaydediliyor...';
+
+            // Analiz sonucunu metin haline getir
+            let resultText = "Analiz sonucu bulunamadı";
+            if (analysisResult && analysisResult.predictions) {
+                if (analysisResult.predictions.length === 0) {
+                    resultText = "Melanoma tespiti yapılmadı";
+                } else {
+                    resultText = analysisResult.predictions.map(d =>
+                        `${d.class_name} (%${(d.confidence * 100).toFixed(2)})`
+                    ).join(', ');
+                }
+            }
+
+            // Rapor verilerini hazırla
+            const reportData = {
+                doctorId: 1, // Dinamik yapılacak
+                patientId: patientData.id,
+                fotografPath: selectedFile ? selectedFile.name : 'unknown.jpg',
+                yzSonucu: resultText
+            };
+
+            const response = await fetch('http://localhost:8080/api/report/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reportData)
+            });
+
+            if (response.ok) {
+                showAlert('Rapor kaydedildi! Yönlendiriliyor...', 'success');
+                setTimeout(() => window.location.href = 'patient.html', 2000);
+            } else {
+                throw new Error('Kayıt başarısız');
+            }
+
+        } catch (error) {
+            saveBtn.disabled = false;
+            saveText.innerHTML = originalText;
+            showAlert('Kayıt hatası: ' + error.message, 'error');
         }
     }
 
@@ -700,10 +854,6 @@
         setTimeout(() => {
             alertBox.classList.remove('show');
         }, 5000);
-    }
-
-    function goBack() {
-        window.history.back();
     }
 </script>
 </body>

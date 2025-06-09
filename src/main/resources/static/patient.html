@@ -3,649 +3,644 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hastalarım - Doktor Paneli</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Hasta ve Rapor Yönetim Sistemi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --light-bg: #f8f9fa;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --border-radius: 12px;
+            --primary-color: #2c5aa0;
+            --secondary-color: #f8f9fa;
+            --success-color: #28a745;
+            --info-color: #17a2b8;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --dark-color: #343a40;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin: 2rem auto;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
         }
 
         .header-section {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e3c72 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
             padding: 2rem;
-            margin-bottom: 2rem;
             text-align: center;
-        }
-
-        .header-section h1 {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            font-size: 2.2rem;
-        }
-
-        .header-section p {
-            color: #6c757d;
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .stat-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-card.primary .icon { color: var(--primary-color); }
-        .stat-card.success .icon { color: var(--success-color); }
-        .stat-card.warning .icon { color: var(--warning-color); }
-
-        .stat-card h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .stat-card p {
-            color: #6c757d;
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            position: relative;
             overflow: hidden;
-            margin-bottom: 2rem;
         }
 
-        .table-header {
-            background: var(--primary-color);
-            color: white;
-            padding: 1.5rem;
-            border-bottom: none;
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
         }
 
-        .table-header h4 {
-            margin: 0;
-            font-weight: 600;
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .stats-container {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .custom-table {
-            margin: 0;
-            border: none;
-        }
-
-        .custom-table thead th {
-            background: #f8f9fa;
-            border: none;
-            padding: 1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        .custom-table tbody td {
-            padding: 1rem;
-            border: none;
-            border-bottom: 1px solid #e9ecef;
-            vertical-align: middle;
-        }
-
-        .custom-table tbody tr:hover {
-            background: #f8f9fa;
-            transition: background 0.2s ease;
-        }
-
-        .badge-reports {
-            background: var(--secondary-color);
-            color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .patient-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--secondary-color);
-            display: inline-flex;
-            align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            margin-right: 0.5rem;
-        }
-
-        .patient-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .patient-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .patient-name {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.2rem;
-        }
-
-        .patient-id {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .empty-state {
-            display: none;
-            text-align: center;
-            padding: 3rem;
-            color: #6c757d;
-        }
-
-        .empty-state .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            color: #dee2e6;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
+            gap: 2rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
-        .btn-custom {
-            border-radius: 25px;
-            padding: 0.7rem 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            min-width: 120px;
         }
 
-        .btn-primary-custom {
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+
+        .search-filter-section {
             background: var(--secondary-color);
-            color: white;
-        }
-
-        .btn-primary-custom:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary-custom {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary-custom:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .search-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
         }
 
         .search-input {
-            border: 2px solid #e9ecef;
             border-radius: 25px;
-            padding: 0.7rem 1.5rem;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1.5rem;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
         }
 
-        /* Analiz Et Butonu Stilleri */
-        .btn-analyze {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .filter-btn {
+            border-radius: 20px;
             padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
+            border: 2px solid transparent;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .patient-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            overflow: hidden;
+        }
+
+        .patient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .patient-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .patient-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .patient-info {
+            color: #6c757d;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .patient-body {
+            padding: 1.5rem;
+        }
+
+        .reports-section {
+            margin-top: 1rem;
+        }
+
+        .reports-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .report-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .report-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .report-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .report-result {
+            margin: 0.5rem 0;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .download-btn, .analyze-btn {
+            border: none;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
 
-        .btn-analyze:hover {
-            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        .download-btn {
+            background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
             color: white;
         }
 
-        .btn-analyze:active {
-            transform: translateY(0);
+        .analyze-btn {
+            background: linear-gradient(135deg, var(--info-color) 0%, #20c997 100%);
+        }
+
+        .analyze-btn:hover {
+            background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+            color: white;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .no-data i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-alert {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 1px solid #f5c6cb;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            color: var(--danger-color);
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 768px) {
             .main-container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                border-radius: 15px 15px 0 0;
+                padding: 1.5rem;
+            }
+
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .stats-container {
+                gap: 1rem;
+            }
+
+            .content-section {
                 padding: 1rem;
             }
 
-            .header-section h1 {
-                font-size: 1.8rem;
-            }
-
-            .stats-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .custom-table {
-                font-size: 0.9rem;
+            .patient-header,
+            .patient-body {
+                padding: 1rem;
             }
         }
 
-        .alert-custom {
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 <div class="main-container">
-    <!-- Header Section -->
     <div class="header-section">
-        <h1><i class="fas fa-user-md"></i> Hasta Yönetim Paneli</h1>
-        <p>Doktora ait hasta listesi ve detayları</p>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="stats-cards">
-        <div class="stat-card primary">
-            <div class="icon"><i class="fas fa-users"></i></div>
-            <h3 id="totalPatients">-</h3>
-            <p>Toplam Hasta</p>
-        </div>
-        <div class="stat-card success">
-            <div class="icon"><i class="fas fa-file-medical"></i></div>
-            <h3 id="totalReports">-</h3>
-            <p>Toplam Rapor</p>
-        </div>
-        <div class="stat-card warning">
-            <div class="icon"><i class="fas fa-calendar-alt"></i></div>
-            <h3 id="avgAge">-</h3>
-            <p>Ortalama Yaş</p>
-        </div>
-    </div>
-
-    <!-- Search Section -->
-    <div class="search-container">
-        <div class="input-group">
-                <span class="input-group-text bg-transparent border-0">
-                    <i class="fas fa-search text-muted"></i>
-                </span>
-            <input type="text" class="form-control search-input border-start-0"
-                   placeholder="Hasta adı, soyadı veya numarası ile ara..."
-                   id="searchInput">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-user-md"></i>
+                Hasta ve Rapor Yönetim Sistemi
+            </h1>
+            <p class="header-subtitle">Profesyonel tıbbi rapor takip ve yönetim platformu</p>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalPatients">-</span>
+                    <span class="stat-label">Toplam Hasta</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalReports">-</span>
+                    <span class="stat-label">Toplam Rapor</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="recentReports">-</span>
+                    <span class="stat-label">Bu Ay</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Loading Spinner -->
-    <div class="loading-spinner" id="loadingSpinner">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Yükleniyor...</span>
+    <div class="content-section">
+        <div class="search-filter-section">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                        <input type="text" class="form-control search-input border-start-0"
+                               id="searchInput" placeholder="Hasta adı, soyadı veya rapor içeriği ara...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-buttons">
+                        <button class="btn btn-outline-primary filter-btn active" data-filter="all">
+                            <i class="fas fa-list"></i> Tümü
+                        </button>
+                        <button class="btn btn-outline-success filter-btn" data-filter="recent">
+                            <i class="fas fa-clock"></i> Son 30 Gün
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p class="mt-3">Hastalar yükleniyor...</p>
-    </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" id="emptyState">
-        <div class="icon"><i class="fas fa-user-slash"></i></div>
-        <h4>Hasta Bulunamadı</h4>
-        <p>Bu doktora ait herhangi bir hasta kaydı bulunmuyor.</p>
-    </div>
-
-    <!-- Table Container -->
-    <div class="table-container" id="tableContainer" style="display: none;">
-        <div class="table-header">
-            <h4><i class="fas fa-list"></i> Hasta Listesi</h4>
+        <div id="hastaListesi">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p class="text-muted">Hasta bilgileri yükleniyor...</p>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table class="table custom-table">
-                <thead>
-                <tr>
-                    <th>Hasta Bilgileri</th>
-                    <th>Doğum Tarihi</th>
-                    <th>Yaş</th>
-                    <th>Rapor Sayısı</th>
-                    <th>Son Güncelleme</th>
-                    <th>İşlemler</th>
-                </tr>
-                </thead>
-                <tbody id="hastaTablosu">
-                <!-- Hastalar buraya eklenecek -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <button onclick="window.location.href='upload.html'" class="btn btn-secondary-custom btn-custom">
-            <i class="fas fa-arrow-left"></i> Geri Dön
-        </button>
-        <button onclick="exportToCSV()" class="btn btn-primary-custom btn-custom">
-            <i class="fas fa-download"></i> Listeyi İndir
-        </button>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-    let allPatients = [];
-    let filteredPatients = [];
+    class PatientReportManager {
+        constructor() {
+            this.doktorId = 1; // Dinamik yapılabilir
+            this.container = document.getElementById('hastaListesi');
+            this.searchInput = document.getElementById('searchInput');
+            this.allPatients = [];
+            this.filteredPatients = [];
+            this.currentFilter = 'all';
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const doktorId = getDoktorId();
-
-        if (!doktorId) {
-            showAlert("Doktor girişi yapılmamış. Lütfen giriş yapın.", "danger");
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 2000);
-            return;
+            this.init();
         }
 
-        loadPatients(doktorId);
-        setupEventListeners();
-    });
-
-    function getDoktorId() {
-        // URL parametresi veya browser storage kullanmadan basit çözüm
-        // Gerçek uygulamada session'dan alınacak
-        return "1"; // Test için sabit değer, gerçekte session'dan gelecek
-    }
-
-    function setupEventListeners() {
-        const searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("input", (e) => {
-            filterPatients(e.target.value);
-        });
-    }
-
-    function showAlert(message, type = "info") {
-        const alertHtml = `
-            <div class="alert alert-${type} alert-custom alert-dismissible fade show" role="alert">
-                <i class="fas fa-${type === 'danger' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
-        document.querySelector('.main-container').insertAdjacentHTML('afterbegin', alertHtml);
-    }
-
-    function showLoading(show = true) {
-        const spinner = document.getElementById("loadingSpinner");
-        const tableContainer = document.getElementById("tableContainer");
-        const emptyState = document.getElementById("emptyState");
-
-        if (show) {
-            spinner.style.display = "block";
-            tableContainer.style.display = "none";
-            emptyState.style.display = "none";
-        } else {
-            spinner.style.display = "none";
+        async init() {
+            this.setupEventListeners();
+            await this.loadPatients();
         }
-    }
 
-    function loadPatients() {
-        showLoading(true);
+        setupEventListeners() {
+            // Arama fonksiyonu
+            this.searchInput.addEventListener('input', (e) => {
+                this.filterPatients(e.target.value);
+            });
 
-        fetch(`http://localhost:8080/api/patient/my`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
+            // Filtre butonları
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    this.currentFilter = e.target.dataset.filter;
+                    this.applyCurrentFilter();
+                });
+            });
+        }
+
+        async loadPatients() {
+            try {
+                this.showLoading();
+
+                const response = await fetch(`http://localhost:8080/api/report/doctors/${this.doktorId}/patients-reports`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const patientsWithReports = await response.json();
+                this.allPatients = patientsWithReports;
+                this.filteredPatients = [...this.allPatients];
+
+                this.updateStats();
+                this.renderPatients();
+
+            } catch (error) {
+                console.error('Veri yükleme hatası:', error);
+                this.showError('Hasta bilgileri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
             }
-        })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-            return res.json();
-        })
-        .then(hastalar => {
-            allPatients = hastalar;
-            filteredPatients = [...hastalar];
-            showLoading(false);
+        }
 
-            if (hastalar.length === 0) {
-                showEmptyState();
+        showLoading() {
+            this.container.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p class="text-muted">Hasta bilgileri yükleniyor...</p>
+                </div>
+            `;
+        }
+
+        showError(message) {
+            this.container.innerHTML = `
+                <div class="error-alert">
+                    <i class="fas fa-exclamation-triangle error-icon"></i>
+                    <h4>Bir Hata Oluştu</h4>
+                    <p>${message}</p>
+                    <button class="btn btn-primary mt-2" onclick="location.reload()">
+                        <i class="fas fa-refresh"></i> Sayfayı Yenile
+                    </button>
+                </div>
+            `;
+        }
+
+        updateStats() {
+            const totalPatients = this.allPatients.length;
+            const totalReports = this.allPatients.reduce((sum, patient) => sum + patient.raporlar.length, 0);
+
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            const recentReports = this.allPatients.reduce((sum, patient) => {
+                return sum + patient.raporlar.filter(rapor => {
+                    const reportDate = new Date(rapor.tarih);
+                    return reportDate >= thirtyDaysAgo;
+                }).length;
+            }, 0);
+
+            document.getElementById('totalPatients').textContent = totalPatients;
+            document.getElementById('totalReports').textContent = totalReports;
+            document.getElementById('recentReports').textContent = recentReports;
+        }
+
+        filterPatients(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+
+            if (!term) {
+                this.filteredPatients = [...this.allPatients];
             } else {
-                displayPatients(hastalar);
-                updateStats(hastalar);
+                this.filteredPatients = this.allPatients.filter(hasta => {
+                    const fullName = `${hasta.ad} ${hasta.soyad}`.toLowerCase();
+                    const hasNameMatch = fullName.includes(term);
+
+                    const hasReportMatch = hasta.raporlar.some(rapor =>
+                        rapor.yzSonucu.toLowerCase().includes(term)
+                    );
+
+                    return hasNameMatch || hasReportMatch;
+                });
             }
-        })
-        .catch(err => {
-            console.error("Hatalı istek:", err);
-            showLoading(false);
-            showAlert("Hastalar yüklenirken hata oluştu. Lütfen tekrar deneyin.", "danger");
-            showEmptyState();
-        });
-    }
 
-    function showEmptyState() {
-        document.getElementById("emptyState").style.display = "block";
-        document.getElementById("tableContainer").style.display = "none";
-    }
+            this.applyCurrentFilter();
+        }
 
-    function displayPatients(hastalar) {
-        const tbody = document.getElementById("hastaTablosu");
-        tbody.innerHTML = "";
+        applyCurrentFilter() {
+            let filtered = [...this.filteredPatients];
 
-        document.getElementById("tableContainer").style.display = "block";
-        document.getElementById("emptyState").style.display = "none";
+            if (this.currentFilter === 'recent') {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-        hastalar.forEach(hasta => {
-            const age = calculateAge(hasta.dogumTarihi);
-            const initials = getInitials(hasta.ad, hasta.soyad);
-            const lastUpdate = new Date().toLocaleDateString('tr-TR');
+                filtered = filtered.filter(hasta =>
+                    hasta.raporlar.some(rapor => {
+                        const reportDate = new Date(rapor.tarih);
+                        return reportDate >= thirtyDaysAgo;
+                    })
+                );
+            }
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>
-                    <div class="patient-info">
-                        <div class="patient-avatar">${initials}</div>
-                        <div class="patient-details">
-                            <div class="patient-name">${hasta.ad} ${hasta.soyad}</div>
-                            <div class="patient-id">ID: ${hasta.id}</div>
+            this.renderPatients(filtered);
+        }
+
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        renderPatients(patients = this.filteredPatients) {
+            if (patients.length === 0) {
+                this.container.innerHTML = `
+                    <div class="no-data fade-in">
+                        <i class="fas fa-user-slash"></i>
+                        <h4>Hasta Bulunamadı</h4>
+                        <p>Arama kriterlerinize uygun hasta bulunamadı.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const patientsHtml = patients.map(hasta => {
+                const raporlarHtml = hasta.raporlar.length > 0
+                    ? hasta.raporlar.map(rapor => `
+                        <div class="report-item">
+                            <div class="report-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${this.formatDate(rapor.tarih)}
+                            </div>
+                            <div class="report-result">
+                                <strong>Yapay Zeka Sonucu:</strong> ${rapor.yzSonucu}
+                            </div>
+                            <div class="d-flex gap-2 flex-wrap mt-2">
+                                <a href="http://localhost:8080/api/report/indir/${rapor.id}"
+                                   class="download-btn" target="_blank">
+                                    <i class="fas fa-download"></i>
+                                    PDF İndir
+                                </a>
+                            </div>
+                        </div>
+                    `).join('')
+                    : '<div class="report-item"><em class="text-muted">Henüz rapor bulunmuyor.</em></div>';
+
+                return `
+                    <div class="patient-card fade-in">
+                        <div class="patient-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="patient-name">
+                                        <i class="fas fa-user"></i>
+                                        ${hasta.ad} ${hasta.soyad}
+                                    </div>
+                                    <div class="patient-info">
+                                        <i class="fas fa-birthday-cake"></i>
+                                        Doğum Tarihi: ${this.formatDate(hasta.dogumTarihi)}
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="patientfoto.html?patientId=${hasta.id}"
+                                       class="analyze-btn">
+                                        <i class="fas fa-microscope"></i>
+                                        Analiz Et
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="patient-body">
+                            <div class="reports-section">
+                                <div class="reports-title">
+                                    <i class="fas fa-file-medical-alt"></i>
+                                    Tıbbi Raporlar (${hasta.raporlar.length})
+                                </div>
+                                ${raporlarHtml}
+                            </div>
                         </div>
                     </div>
-                </td>
-                <td>${formatDate(hasta.dogumTarihi)}</td>
-                <td>${age} yaş</td>
-                <td><span class="badge-reports">${hasta.reports ? hasta.reports.length : 0}</span></td>
-                <td><small class="text-muted">${lastUpdate}</small></td>
-                <td>
-                    <button class="btn-analyze" onclick="analyzePatient(${hasta.id}, '${hasta.ad}', '${hasta.soyad}')" title="Hasta Analizi Yap">
-                        <i class="fas fa-microscope"></i> Analiz Et
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+                `;
+            }).join('');
 
-    function filterPatients(searchTerm) {
-        if (!searchTerm.trim()) {
-            filteredPatients = [...allPatients];
-        } else {
-            const term = searchTerm.toLowerCase();
-            filteredPatients = allPatients.filter(hasta =>
-                hasta.ad.toLowerCase().includes(term) ||
-                hasta.soyad.toLowerCase().includes(term) ||
-                hasta.id.toString().includes(term)
-            );
-        }
-
-        if (filteredPatients.length === 0) {
-            showEmptyState();
-        } else {
-            displayPatients(filteredPatients);
+            this.container.innerHTML = patientsHtml;
         }
     }
 
-    function updateStats(hastalar) {
-        const totalPatients = hastalar.length;
-        const totalReports = hastalar.reduce((sum, hasta) =>
-            sum + (hasta.reports ? hasta.reports.length : 0), 0);
-        const avgAge = totalPatients > 0 ?
-            Math.round(hastalar.reduce((sum, hasta) =>
-                sum + calculateAge(hasta.dogumTarihi), 0) / totalPatients) : 0;
-
-        document.getElementById("totalPatients").textContent = totalPatients;
-        document.getElementById("totalReports").textContent = totalReports;
-        document.getElementById("avgAge").textContent = avgAge;
-    }
-
-    function calculateAge(birthDate) {
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-            age--;
-        }
-
-        return age;
-    }
-
-    function getInitials(firstName, lastName) {
-        return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-    }
-
-    function formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('tr-TR');
-    }
-
-    function exportToCSV() {
-        if (filteredPatients.length === 0) {
-            showAlert("İndirilecek hasta bulunamadı.", "warning");
-            return;
-        }
-
-        const headers = ['Hasta No', 'Ad', 'Soyad', 'Doğum Tarihi', 'Yaş', 'Rapor Sayısı'];
-        const csvContent = [
-            headers.join(','),
-            ...filteredPatients.map(hasta => [
-                hasta.id,
-                hasta.ad,
-                hasta.soyad,
-                hasta.dogumTarihi,
-                calculateAge(hasta.dogumTarihi),
-                hasta.reports ? hasta.reports.length : 0
-            ].join(','))
-        ].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `hastalar_${new Date().toISOString().split('T')[0]}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        showAlert("Hasta listesi başarıyla indirildi.", "success");
-    }
-
-    // Hasta analizi fonksiyonu
-    function analyzePatient(patientId, firstName, lastName) {
-        // URL parametreleri ile hasta bilgilerini geç
-        const params = new URLSearchParams({
-            patientId: patientId,
-            firstName: firstName,
-            lastName: lastName
-        });
-
-        // patientfoto.html sayfasına hasta bilgileri ile yönlendir
-        window.location.href = `patientfoto.html?${params.toString()}`;
-    }
+    // Sayfa yüklendiğinde uygulamayı başlat
+    document.addEventListener('DOMContentLoaded', () => {
+        new PatientReportManager();
+    });
 </script>
 </body>
 </html>

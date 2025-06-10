@@ -450,7 +450,6 @@
             </div>
         </div>
 
-        <!-- Analysis Section -->
         <div class="analysis-section">
             <div class="analysis-header">
                 <div class="analysis-icon">
@@ -498,7 +497,6 @@
     let patientData = null;
     let analysisResult = null;
 
-    // Sayfa yüklendiğinde hasta bilgilerini al
     document.addEventListener('DOMContentLoaded', function() {
         loadPatientInfo();
         setupDragAndDrop();
@@ -756,7 +754,6 @@
                     resultsContent.innerHTML = resultsHtml;
                     resultsContent.className = 'results-content success';
 
-                    // Analiz başarılı olduğunda rapor kaydet butonunu aktif et
                     document.getElementById('saveReportBtn').disabled = false;
 
                     showAlert('Melanoma analizi başarıyla tamamlandı!', 'success');
@@ -804,7 +801,6 @@
             saveBtn.disabled = true;
             saveText.innerHTML = '<div class="loading-spinner"></div> Kaydediliyor...';
 
-            // Analiz sonucunu metin haline getir
             let resultText = "Analiz sonucu bulunamadı";
             if (analysisResult && analysisResult.predictions) {
                 if (analysisResult.predictions.length === 0) {
@@ -816,7 +812,6 @@
                 }
             }
 
-            // Rapor verilerini hazırla
             const reportData = {
                 doctorId: 1, // Dinamik yapılacak
                 patientId: patientData.id,

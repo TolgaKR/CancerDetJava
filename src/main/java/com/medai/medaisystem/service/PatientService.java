@@ -26,7 +26,6 @@ public class PatientService {
     @Autowired
     private ReportRepository reportRepository;
 
-    // DTO ile hasta kaydetme
     public Patient hastaKaydetDto(PatientDto dto) {
         Patient patient = new Patient();
         patient.setAd(dto.getAd());
@@ -100,7 +99,7 @@ public class PatientService {
                 ReportSummaryDto raporDto = new ReportSummaryDto();
                 raporDto.setId(rapor.getId());
                 raporDto.setTarih(rapor.getTarih().toString());
-                raporDto.setYzSonucu(rapor.getYzSonucu()); // ya da sadece başlık
+                raporDto.setYzSonucu(rapor.getYzSonucu());
                 return raporDto;
             }).toList();
 

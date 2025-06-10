@@ -245,7 +245,6 @@
         <div class="mesaj" id="mesaj"></div>
     </form>
 
-    <!-- Navigation Buttons -->
     <div class="nav-buttons">
         <button type="button" class="nav-btn secondary" onclick="window.location.href='patient.html'">
             <i class="fas fa-list"></i> Hastalarımı Gör
@@ -309,7 +308,6 @@
         }
     });
 
-    // Mesajı otomatik gizle
     function hideMessage() {
         const mesajDiv = document.getElementById('mesaj');
         if (mesajDiv.classList.contains('show')) {
@@ -319,7 +317,6 @@
         }
     }
 
-    // Mesaj gösterildiğinde otomatik gizleme başlat
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'class') {

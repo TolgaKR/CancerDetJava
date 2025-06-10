@@ -24,7 +24,7 @@ public class Patient {
     private String soyad;
     private LocalDate dogumTarihi;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Lazy daha iyidir performans açısından
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 

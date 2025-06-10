@@ -20,7 +20,7 @@ public class DoctorService {
         return doctorRepository.save(doktor);
     }
 
-    // Giriş işlemi: email ve şifre kontrolü + DTO dönüşü
+
     public Optional<LoginResponseDto> login(LoginRequestDto loginRequestDto) {
         Optional<Doctor> doktorOpt = doctorRepository.findByEmail(loginRequestDto.getEmail());
 
@@ -42,7 +42,6 @@ public class DoctorService {
         return Optional.empty();
     }
 
-    // ID'ye göre doktoru getirir
     public Optional<Doctor> doktorGetir(Long id) {
         return doctorRepository.findById(id);
     }

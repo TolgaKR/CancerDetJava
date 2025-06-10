@@ -50,19 +50,19 @@ public class ReportController {
         }
     }
 
-    // Doktora ait tüm raporlar
+
     @GetMapping("/doktor/{doktorId}")
     public List<Report> doktorRaporlari(@PathVariable Long doktorId) {
         return reportService.doktorRaporlari(doktorId);
     }
 
-    // Tek bir rapor getir
+
     @GetMapping("/{id}")
     public Optional<Report> raporGetir(@PathVariable Long id) {
         return reportService.raporGetir(id);
     }
 
-    // PDF olarak indir
+
     @GetMapping("/indir/{id}")
     public void raporPdfIndir(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Optional<Report> optionalReport = reportService.raporGetir(id);
@@ -91,13 +91,13 @@ public class ReportController {
         }
     }
 
-    // Doktorun hastaları DTO olarak (frontend için)
+
     @GetMapping("/doctors/{doktorId}/patients")
     public List<PatientResponseDto> doktorunHastalariDto(@PathVariable Long doktorId) {
         return patientService.doktorunHastalariDto(doktorId);
     }
 
-    // Doktorun hastaları ve her hastanın rapor özetleri
+
     @GetMapping("/doctors/{doktorId}/patients-reports")
     public List<PatientWithReportsDto> doktorunHastalariVeRaporlari(@PathVariable Long doktorId) {
         return patientService.doktorunHastalariVeRaporlari(doktorId);

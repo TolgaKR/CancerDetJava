@@ -74,7 +74,7 @@ public class ImageUploadController {
         }
     }
 
-    // Basit bir test endpoint'i (tarayıcıdan erişilebilir)
+
     @GetMapping("/test")
     public String testEndpoint() {
         return "Controller çalışıyor!";

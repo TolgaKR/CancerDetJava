@@ -29,7 +29,7 @@ public class PatientController {
         this.doctorRepository = doctorRepository;
     }
 
-    // HASTA KAYDETME
+
     @PostMapping
     public Patient hastaKaydet(@RequestBody PatientDto patientDto, HttpSession session) {
         String email = (String) session.getAttribute("doctorEmail");
@@ -46,7 +46,7 @@ public class PatientController {
         return patientService.hastaKaydetDto(patientDto);
     }
 
-    // ID'YE GÖRE HASTA GETİRME
+
     @GetMapping("/{id}")
     public Optional<Patient> hastaGetir(@PathVariable Long id) {
         return patientService.hastaGetir(id);
